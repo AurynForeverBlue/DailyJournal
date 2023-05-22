@@ -15,7 +15,7 @@ class UserController extends Controller
         return view('pages.users.login');
     }
 
-    public function authenticateUser(AuthenticateUserRequest $request)
+    public function authenticate(AuthenticateUserRequest $request)
     {
         $input_data = $request->validated();
 
@@ -40,7 +40,7 @@ class UserController extends Controller
         return view('pages.users.register');
     }
 
-    public function createUser(CreateUserRequest $request)
+    public function store(CreateUserRequest $request)
     {
         $input_data = $request->validated();
         $new_user_data = [
@@ -50,7 +50,7 @@ class UserController extends Controller
         ];
 
         User::create($new_user_data);
-        return redirect("/login")->with('succes', 'Account has been created. Check your email to validate your account.');
+        return redirect("/login")->with('succes', 'Account has been created.');
     }
 
     public function logout()

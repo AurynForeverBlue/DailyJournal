@@ -1,4 +1,4 @@
 @extends('layout')
 @section('main')
-    @dump($user)
+    @include('components.journals.journalContainer')
 @endsection

@@ -15,7 +15,7 @@ class JournalController extends Controller
     public function index()
     {
         return view('pages.journal.index', [
-            "user" => Auth::user()
+            "journals" => Journal::all()->sortByDesc('created_at')
         ]);
     }
 
@@ -24,7 +24,7 @@ class JournalController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.journal.create');
     }
 
     /**
@@ -32,38 +32,70 @@ class JournalController extends Controller
      */
     public function store(StoreJournalRequest $request)
     {
-        //
+        $request_data = $request->validated();
+        
+        $new_user_data = [
+            'user_id' => Auth::user()->id,
+            'title' => $request_data['title'],
+            'body' => $request_data['body'],
+        ];
+
+        Journal::create($new_user_data);
+
+        return redirect("/")->with('succes', 'Journal has been posted');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Journal $journal)
+    public function show($journal_id)
     {
-        //
+        if (Auth::check()){
+            $user_id = Auth::user()->id;
+        }
+        else {
+            $user_id = null;
+        }
+
+        return view('pages.journal.show', [
+            "journal" => Journal::where("journal_id", $journal_id)->first(),
+            "user_id" => $user_id
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Journal $journal)
+    public function edit($journal_id)
     {
-        //
+        return view('pages.journal.edit', [
+            "journal" => Journal::where("journal_id", $journal_id)->first()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateJournalRequest $request, Journal $journal)
+    public function update(UpdateJournalRequest $request)
     {
-        //
+        $request_data = $request->validated();
+
+        Journal::where('journal_id', $request_data["journal_id"])
+                ->update([
+                    'title' => $request_data["title"],
+                    'body' => $request_data["body"]
+                ]);
+
+        return redirect("/")->with('succes', 'Journal has been updated');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Journal $journal)
+    public function destroy($journal_id)
     {
-        //
+        Journal::where('journal_id', $journal_id)->delete();
+
+        return redirect("/")->with('succes', 'Journal has been deleted');
     }
 }

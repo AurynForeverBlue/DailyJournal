@@ -1,0 +1,33 @@
+#authenticate-card {
+    width: 60%;
+    height: 500px;
+    margin: auto;
+    margin-top: 150px;
+    border: 1px solid black;
+}
+
+#authenticate-card h2{
+    text-align: center;
+    margin-top: 50px;
+}
+
+#authenticate-card form{
+    margin: auto;
+    margin-top: 50px;
+    width: 40%;
+}
+
+#authenticate-card form input[type=email],
+#authenticate-card form input[type=text],
+#authenticate-card form input[type=password]{
+    width: calc(100% - 5.5px);
+    padding-left: 5px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-bottom: 20px;
+}
+
+#authenticate-card p{
+    text-align: center;
+    margin-top: 10px;
+}

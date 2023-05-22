@@ -1,9 +1,11 @@
 <form action="{{ route('authenticateUser') }}" method="post">
     @csrf
 
-    <input type="text" name="username" placeholder="Username" value="{{ old('username') }}" required><br>
+    <label for="username">Username</label>
+    <input type="text" name="username" value="{{ old('username') }}" required>
+    
+    <label for="password">Password</label>
+    <input type="password" name="password" required>
 
-    <input type="password" name="password" placeholder="Password" required><br>
-
-    <input type="submit" value="Login">
+    <input type="submit" value="Login" class="btn btn-blue">
 </form>
