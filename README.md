@@ -9,4 +9,4 @@ For not I'm not planning to upload it to the public domain. Before I do so I wan
 
 
 ## Contributing
-If you're interested in helping me create this project. YES PLEASE. I'm not the best designer. if you want to contribute, please [email me](mailto:garciachris1506@gmail.com)
+If you're interested in helping me create this project. YES PLEASE. I'm not the best designer. if you want to contribute, please [email me](mailto:garciachrisg1506@gmail.com)
