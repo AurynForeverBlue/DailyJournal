@@ -8,5 +8,5 @@
     <label for="body">Body</label><br>
     <textarea name="body" id="body">{{ $journal->body }}</textarea><br>
 
-    <input type="submit" value="Update Journal">
+    <input type="submit" value="Update Journal" class="btn btn-blue">
 </form>

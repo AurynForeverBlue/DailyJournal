@@ -50,7 +50,7 @@ class UserController extends Controller
         ];
 
         User::create($new_user_data);
-        return redirect("/login")->with('succes', 'Account has been created. Check your email to validate your account.');
+        return redirect("/login")->with('succes', 'Account has been created.');
     }
 
     public function logout()

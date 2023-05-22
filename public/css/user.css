@@ -2,13 +2,18 @@
     width: 60%;
     height: 500px;
     margin: auto;
-    margin-top: 15%;
+    margin-top: 150px;
     border: 1px solid black;
+}
+
+#authenticate-card h2{
+    text-align: center;
+    margin-top: 50px;
 }
 
 #authenticate-card form{
     margin: auto;
-    margin-top: 25%;
+    margin-top: 50px;
     width: 40%;
 }
 
@@ -24,4 +29,5 @@
 
 #authenticate-card p{
     text-align: center;
+    margin-top: 10px;
 }

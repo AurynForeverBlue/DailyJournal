@@ -6,5 +6,5 @@
     <label for="body">Body</label><br>
     <textarea name="body" id="body"></textarea><br>
 
-    <input type="submit" value="Post">
+    <input type="submit" value="Post journal entry" class="btn btn-blue">
 </form>

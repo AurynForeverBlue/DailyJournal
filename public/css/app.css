@@ -14,12 +14,12 @@
     display: flex;
     justify-content: space-between;
     padding: 7px;
-    border-bottom: 1px solid black;
+    background-color: black;
 }
 
 #page-title {
     text-decoration: none;
-    color: black;
+    color: white;
 }
 
 #page-title:hover {
@@ -28,6 +28,23 @@
 
 #navbar-button {
     margin-top: 5px;
+}
+
+#error-container,
+#succes-container {
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+#error-container {
+    background-color: red;
+    color: white;
+}
+
+#succes-container {
+    background-color: green;
 }
 
 /* buttons */

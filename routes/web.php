@@ -17,7 +17,7 @@ use App\Http\Controllers\JournalController;
 
 
 Route::get('/', [JournalController::class, 'index']);
-
+Route::get('/{slug}/journal', [JournalController::class, 'show']);
 
 Route::group(['middleware' => ['guest']], function () { 
     Route::get('/login', [UserController::class, 'showLogin'])->name('login');
@@ -30,7 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/create/journal', [JournalController::class, 'create']);
     Route::post('/store/journal', [JournalController::class, 'store'])->name("storeJournal");
 
-    Route::get('/{slug}/journal', [JournalController::class, 'show']);
 
     Route::get('/{slug}/edit/journal', [JournalController::class, 'edit']);
     Route::post('/update/journal', [JournalController::class, 'update'])->name("updateJournal");

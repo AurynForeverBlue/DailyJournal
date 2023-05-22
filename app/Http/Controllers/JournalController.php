@@ -50,9 +50,16 @@ class JournalController extends Controller
      */
     public function show($journal_id)
     {
+        if (Auth::check()){
+            $user_id = Auth::user()->id;
+        }
+        else {
+            $user_id = null;
+        }
+
         return view('pages.journal.show', [
             "journal" => Journal::where("journal_id", $journal_id)->first(),
-            "user_id" => Auth::user()->id
+            "user_id" => $user_id
         ]);
     }
 
