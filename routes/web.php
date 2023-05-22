@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\JournalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', [JournalController::class, 'index']);
+
+Route::get('/login', [UserController::class, 'showLogin'])->name('login');
+Route::post('/authenticate', [UserController::class, 'authenticateUser'])->name("authenticateUser");
+Route::get('/register', [UserController::class, 'showRegister']);
+Route::post('/create/user', [UserController::class, 'createUser'])->name("createUser");
+Route::post('/logout',  [UserController::class, 'logout'])->name("logout");
