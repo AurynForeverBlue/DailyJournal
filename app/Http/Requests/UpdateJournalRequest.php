@@ -11,7 +11,7 @@ class UpdateJournalRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,34 @@ class UpdateJournalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'journal_id' => [
+                'required',
+                'min:1',
+            ],
+            'title' => [
+                'required',
+                'min:3',
+            ],
+            'body' => [
+                'required',
+                'min:3',
+            ],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Post title is required',
+            'title.min:3' => 'Post title is too short',
+            
+            'body.required' => 'Post body is required',
+            'body.min:3' => 'Post body is too short',
         ];
     }
 }

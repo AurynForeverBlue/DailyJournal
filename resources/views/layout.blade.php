@@ -11,14 +11,19 @@
 </head>
 <body>
     <nav id="navbar">
-        <a href="/" id="page-title"><h1>DailyJournal</h1></a>
+        <div>
+            <a href="/" id="page-title"><h1>DailyJournal</h1></a>
+        </div>
         
-        @auth
-        <p>fuck</p>
-        @endauth
-        @guest
-            <a href="/login" class="btn btn-blue">Login</a>
-        @endguest
+        <div id="navbar-button">
+            @auth
+                <a href="/create/post" class="btn btn-blue">Post</a>
+                <a href="/logout" class="btn btn-red">Logout</a>
+            @endauth
+            @guest
+                <a href="/login" class="btn btn-blue">Login</a>
+            @endguest
+        </div>
     </nav>
     @yield('main')
 </body>

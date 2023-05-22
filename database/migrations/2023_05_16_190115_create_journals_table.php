@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('journals', function (Blueprint $table) {
             $table->id("journal_id");
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string("title");
             $table->longText("body");
             $table->timestamps();
