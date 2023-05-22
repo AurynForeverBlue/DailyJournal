@@ -17,7 +17,7 @@
         
         <div id="navbar-button">
             @auth
-                <a href="/create/post" class="btn btn-blue">Post</a>
+                <a href="/create/journal" class="btn btn-blue">Create Journal</a>
                 <a href="/logout" class="btn btn-red">Logout</a>
             @endauth
             @guest

@@ -1,0 +1,28 @@
+#journal-container {
+    width: 65%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.journal-item-link {
+    text-decoration: none;
+    color: black;
+}
+
+.journal-item {
+    border: 1px solid black;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.journal-item:hover {
+    border: 1px solid rgb(206, 206, 206);
+    padding: 20px;
+}
+
+.journal-item p{
+    line-height: 1.5em;
+    height: 4.5em;  
+    overflow: hidden;
+}

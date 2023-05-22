@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url("./user.css");
+@import url("./journal.css");
 
 * {
     margin: 0;
@@ -41,6 +43,7 @@
 
 .btn-blue:hover {
     background-color: rgb(53, 53, 252);
+    cursor: pointer;
 }
 
 .btn-blue:active {
@@ -54,6 +57,7 @@
 
 .btn-red:hover {
     background-color: rgb(252, 53, 53);
+    cursor: pointer;
 }
 
 .btn-red:active {
@@ -64,6 +68,3 @@ a.btn {
     text-decoration: none;
 }
 
-/* User */
-
-/* journal */
