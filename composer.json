@@ -4,7 +4,7 @@
     "description": "Share your daily story",
     "keywords": ["journal", "daily", "share"],
     "license": "MIT",
-    "version": "0.1.0"
+    "version": "0.1.0",
     "authors": [
         {
             "name": "Christopher Garcia",
