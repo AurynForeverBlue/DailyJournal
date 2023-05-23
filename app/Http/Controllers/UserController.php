@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\Uuid;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +11,8 @@ use App\Http\Requests\AuthenticateUserRequest;
 
 class UserController extends Controller
 {
+    use Uuid;
+
     public function showlogin()
     {
         return view('pages.users.login');
@@ -44,6 +47,7 @@ class UserController extends Controller
     {
         $input_data = $request->validated();
         $new_user_data = [
+            'user_id' => $this->createUuid(),
             'email' => $input_data['email'],
             'username' => $input_data['username'],
             'password' => bcrypt($input_data['password']),

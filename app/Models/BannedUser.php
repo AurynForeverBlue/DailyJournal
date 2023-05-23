@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Journal extends Model
+class BannedUser extends Model
 {
     use HasFactory;
 
-    protected $table = 'journals';
+    protected $table = 'banned_users';
 
     /**
      * The attributes that are mass assignable.
@@ -17,10 +17,9 @@ class Journal extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'journal_id',
+        'ban_id',
         'user_id',
-        'title',
-        'body',
+        'reason'
     ];
 
     public function user()

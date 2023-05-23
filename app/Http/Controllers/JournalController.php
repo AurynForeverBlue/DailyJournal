@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\Uuid;
 use App\Models\Journal;
 use App\Http\Requests\StoreJournalRequest;
 use App\Http\Requests\UpdateJournalRequest;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class JournalController extends Controller
 {
+    use Uuid;
+
     /**
      * Display a listing of the resource.
      */
@@ -35,7 +38,8 @@ class JournalController extends Controller
         $request_data = $request->validated();
         
         $new_user_data = [
-            'user_id' => Auth::user()->id,
+            'journal_id' => $this->createUuid(),
+            'user_id' => Auth::user()->user_id,
             'title' => $request_data['title'],
             'body' => $request_data['body'],
         ];
@@ -51,7 +55,7 @@ class JournalController extends Controller
     public function show($journal_id)
     {
         if (Auth::check()){
-            $user_id = Auth::user()->id;
+            $user_id = Auth::user()->user_id;
         }
         else {
             $user_id = null;
