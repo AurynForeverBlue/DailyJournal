@@ -59,6 +59,7 @@
     margin-bottom: 20px;
 }
 
-#journal-form form textarea{
+#journal-form form #body{
     height: 200px;
+    resize: vertical;
 }

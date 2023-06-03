@@ -7,7 +7,12 @@
     <title>DailyJournal | Share your daily story</title>
     <meta name="description" content="Do you want to share your daily story with the world. Here you can do so. You can even stay Anonymous">
 
+    {{-- css --}}
     <link rel="stylesheet" href="{{ asset("css/app.css") }}">
+
+    {{-- js --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    @yield('js')
 </head>
 <body>
     <nav id="navbar">
@@ -17,7 +22,7 @@
         
         <div id="navbar-button">
             @auth
-                <a href="/create/journal" class="btn btn-blue">Create Journal</a>
+                <a href="/write" class="btn btn-blue">Create Journal</a>
                 <a href="/logout" class="btn btn-red">Logout</a>
             @endauth
             @guest

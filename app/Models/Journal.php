@@ -9,7 +9,23 @@ class Journal extends Model
 {
     use HasFactory;
 
+    /**
+     * table information
+     *
+     * @var string $table>
+     */
     protected $table = 'journals';
+    /** @var string $primaryKey */
+    protected $primaryKey = 'journal_id';
+
+    /**
+     * Index information
+     *
+     * @var string $keyType>
+     */
+    protected $keyType = 'string';
+    /** @var bool $incrementing */
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.

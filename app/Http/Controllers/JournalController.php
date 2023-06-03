@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\Uuid;
-use App\Models\Journal;
 use App\Http\Requests\StoreJournalRequest;
 use App\Http\Requests\UpdateJournalRequest;
+use App\Jobs\CreateJournalJob;
+use App\Jobs\DeleteJournalJob;
+use App\Traits\Uuid;
+use App\Models\Journal;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\UpdateJournalJob;
 
 class JournalController extends Controller
 {
@@ -44,7 +47,7 @@ class JournalController extends Controller
             'body' => $request_data['body'],
         ];
 
-        Journal::create($new_user_data);
+        CreateJournalJob::dispatch($new_user_data);
 
         return redirect("/")->with('succes', 'Journal has been posted');
     }
@@ -60,7 +63,7 @@ class JournalController extends Controller
         else {
             $user_id = null;
         }
-
+        
         return view('pages.journal.show', [
             "journal" => Journal::where("journal_id", $journal_id)->first(),
             "user_id" => $user_id
@@ -72,9 +75,16 @@ class JournalController extends Controller
      */
     public function edit($journal_id)
     {
-        return view('pages.journal.edit', [
-            "journal" => Journal::where("journal_id", $journal_id)->first()
-        ]);
+        $journal_data = Journal::where("journal_id", $journal_id)->first();
+
+        if ($journal_data["user_id"] == Auth::user()->user_id) {
+            return view('pages.journal.edit', [
+                "journal" => $journal_data
+            ]);
+        }
+        else {
+            return redirect("/banuser/".Auth::user()->user_id);
+        }
     }
 
     /**
@@ -84,11 +94,14 @@ class JournalController extends Controller
     {
         $request_data = $request->validated();
 
-        Journal::where('journal_id', $request_data["journal_id"])
-                ->update([
-                    'title' => $request_data["title"],
-                    'body' => $request_data["body"]
-                ]);
+        $updated_journal = [
+            'journal_id' => $request_data["journal_id"],
+            'user_id' => Auth::user()->user_id,
+            'title' => $request_data["title"],
+            'body' => $request_data["body"]
+        ];
+        
+        UpdateJournalJob::dispatch($updated_journal);
 
         return redirect("/")->with('succes', 'Journal has been updated');
     }
@@ -97,9 +110,13 @@ class JournalController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($journal_id)
-    {
-        Journal::where('journal_id', $journal_id)->delete();
+    {   
+        $journal_data = [
+            'journal_id' => $journal_id,
+        ];
 
+        DeleteJournalJob::dispatch($journal_data);
+        
         return redirect("/")->with('succes', 'Journal has been deleted');
     }
 }

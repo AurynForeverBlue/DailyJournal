@@ -2,10 +2,18 @@
     @csrf
 
     <label for="username">Username</label>
-    <input type="text" name="username" value="{{ old('username') }}" required>
+    <input type="text" 
+           name="username" 
+           value="{{ old('username') }}" 
+           required>
     
     <label for="password">Password</label>
-    <input type="password" name="password" required>
+    <input type="password" 
+           name="password" 
+           value="{{ old('username') }}" 
+           required>
 
-    <input type="submit" value="Login" class="btn btn-blue">
+    <input type="submit" 
+           value="Login" 
+           class="btn btn-blue">
 </form>
