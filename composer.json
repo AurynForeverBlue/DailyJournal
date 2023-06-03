@@ -4,12 +4,11 @@
     "description": "Share your daily story",
     "keywords": ["journal", "daily", "share"],
     "license": "MIT",
-    "version": "0.1.0"
+    "version": "0.2.0",
     "authors": [
         {
             "name": "Christopher Garcia",
-            "email": "garciachrisg1506@gmail.com",
-            "homepage": ""
+            "email": "garciachrisg1506@gmail.com"
         }
     ],
     "require": {

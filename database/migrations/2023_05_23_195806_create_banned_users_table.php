@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('journals', function (Blueprint $table) {
-            $table->uuid("journal_id")->index();
-            $table->string("title");
-            $table->longText("body");
+        Schema::create('banned_users', function (Blueprint $table) {
+            $table->uuid("ban_id")->index();
+            $table->string('reason')->nullable();
+            $table->timestamp('banned_until');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('journals');
+        Schema::dropIfExists('banned_users');
     }
 };

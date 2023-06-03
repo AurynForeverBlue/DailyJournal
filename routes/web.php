@@ -17,24 +17,24 @@ use App\Http\Controllers\JournalController;
 
 
 Route::get('/', [JournalController::class, 'index']);
-Route::get('/{slug}/journal', [JournalController::class, 'show']);
+Route::get('/journal/{slug}', [JournalController::class, 'show']);
 
 Route::group(['middleware' => ['guest']], function () { 
     Route::get('/login', [UserController::class, 'showLogin'])->name('login');
     Route::post('/authenticate', [UserController::class, 'authenticate'])->name("authenticateUser");
     Route::get('/register', [UserController::class, 'showRegister']);
-    Route::post('/create/user', [UserController::class, 'store'])->name("createUser");
+    Route::post('/createUser', [UserController::class, 'store'])->name("createUser");
 });
 
 Route::group(['middleware' => ['auth']], function () { 
-    Route::get('/create/journal', [JournalController::class, 'create']);
-    Route::post('/store/journal', [JournalController::class, 'store'])->name("storeJournal");
+    Route::get('/write', [JournalController::class, 'create']);
+    Route::post('/storeJournal', [JournalController::class, 'store'])->name("storeJournal");
 
 
-    Route::get('/{slug}/edit/journal', [JournalController::class, 'edit']);
-    Route::post('/update/journal', [JournalController::class, 'update'])->name("updateJournal");
+    Route::get('/update/{slug}', [JournalController::class, 'edit']);
+    Route::post('/updateJournal', [JournalController::class, 'update'])->name("updateJournal");
 
-    Route::get('/{slug}/delete/journal', [JournalController::class, 'destroy']);
+    Route::get('/burninfire/{slug}', [JournalController::class, 'destroy']);
 
     Route::get('/logout',  [UserController::class, 'logout'])->name("logout");
 });
