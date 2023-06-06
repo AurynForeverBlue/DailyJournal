@@ -23,6 +23,7 @@
         <div id="navbar-button">
             @auth
                 <a href="/write" class="btn btn-blue">Create Journal</a>
+                <a href="/settings" class="btn btn-gray">Settings</a>
                 <a href="/logout" class="btn btn-red">Logout</a>
             @endauth
             @guest

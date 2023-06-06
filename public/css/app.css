@@ -53,6 +53,10 @@
     border: 1px solid black;
 }
 
+.btn:hover {
+    cursor: pointer;
+}
+
 .btn-blue {
     color: white;
     background-color: rgb(25, 25, 253);
@@ -60,11 +64,23 @@
 
 .btn-blue:hover {
     background-color: rgb(53, 53, 252);
-    cursor: pointer;
 }
 
 .btn-blue:active {
     background-color: rgb(78, 78, 244);
+}
+
+.btn-gray {
+    color: white;
+    background-color: gray;
+}
+
+.btn-gray:hover {
+    background-color: rgb(151, 151, 151);
+}
+
+.btn-gray:active {
+    background-color: rgb(176, 176, 176);
 }
 
 .btn-red {
@@ -74,7 +90,6 @@
 
 .btn-red:hover {
     background-color: rgb(252, 53, 53);
-    cursor: pointer;
 }
 
 .btn-red:active {

@@ -36,5 +36,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/burninfire/{slug}', [JournalController::class, 'destroy']);
 
+    Route::get('/settings', [UserController::class, 'settings']);
+    Route::post('/update/user/email', [UserController::class, 'updateEmail'])->name("updateEmail");
+    Route::post('/update/user/username', [UserController::class, 'updateUsername'])->name("updateUsername");
+    Route::post('/update/user/password', [UserController::class, 'updatePassword'])->name("updatePassword");
+
     Route::get('/logout',  [UserController::class, 'logout'])->name("logout");
 });
