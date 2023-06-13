@@ -31,17 +31,22 @@
             @endguest
         </div>
     </nav>
+
     @if ($errors->any() || session('error'))
         <div id="error-container">
             <ul>
-                @foreach ($errors->all() as $error)
-                    <li class="">{{ $error }}</li>
-                @endforeach
-                <li class="">{{ session('error') }}</li>
-                <li class="">{{ session('succes') }}</li>
+                @if ($errors->any())
+                    @foreach ($errors->all() as $error)
+                        <li class="">{{ $error }}</li>
+                    @endforeach
+                @endif
+                @if (session('error'))
+                    <li class="">{{ session('error') }}</li>
+                @endif
             </ul>
         </div>
     @endif
+
     @if (session('succes'))
         <div id="succes-container">
             <ul>
@@ -49,6 +54,7 @@
             </ul>
         </div>
     @endif
+
     @yield('main')
 </body>
 </html>

@@ -18,6 +18,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Http\Requests\AuthenticateUserRequest;
 
+
 class UserController extends Controller
 {
     use Uuid;
@@ -32,6 +33,7 @@ class UserController extends Controller
 
     /**
      * Login user
+     * @param AuthenticateUserRequest $request
      */
     public function authenticate(AuthenticateUserRequest $request)
     {
@@ -62,6 +64,7 @@ class UserController extends Controller
 
     /**
      * Store a newly created User in the database
+     * @param CreateUserRequest $request
      */
     public function store(CreateUserRequest $request)
     {
@@ -98,53 +101,57 @@ class UserController extends Controller
 
     /**
      * Update the specified user email in database
+     * @param UpdateEmailRequest $request
      */
     public function updateEmail(UpdateEmailRequest $request)
     {
         $request_data = $request->validated();
         $database_user = Auth::user();
-        $updated_item = "email";
 
         if (Hash::check($database_user["email"], $request_data["email"])) {
             return redirect("/")->back()->with('succes', "Can't update e-mail to current username");
         }
+        
+        $encrypted_email = bcrypt($request_data["email"]);
 
-        UpdateUserJob::dispatch();
-        return redirect("/")->with('succes', "");
+        UpdateUserJob::dispatch("email", $database_user, $encrypted_email);
+        return redirect("/")->with('succes', "E-mail updated successfully");
     }
 
     /**
      * Update the specified user username in database
+     * @param UpdateUsernameRequest $request
      */
     public function updateUsername(UpdateUsernameRequest $request)
     {
         $request_data = $request->validated();
         $database_user = Auth::user();
-        $updated_item = "username";
-
+        
         if ($database_user["username"] == $request_data["username"]) {
             return redirect("/")->back()->with('succes', "Can't update e-mail to current username");
         }
 
-        UpdateUserJob::dispatch();
-        return redirect("/")->with('succes', "");
+        UpdateUserJob::dispatch("username", $database_user, $request_data["username"]);
+        return redirect("/")->with('succes', "Username updated successfully");
     }
 
     /**
      * Update the specified user password in database
+     * @param UpdatePasswordRequest $request
      */
     public function updatePassword(UpdatePasswordRequest $request)
     {
         $request_data = $request->validated();
         $database_user = Auth::user();
-        $updated_item = "password";
 
         if (Hash::check($database_user["password"], $request_data["password"])) {
             return redirect("/")->back()->with('succes', "Can't update e-mail to current username");
         }
 
-        UpdateUserJob::dispatch();
-        return redirect("/")->with('succes', "");
+        $encrypted_password = bcrypt($request_data["password"]);
+
+        UpdateUserJob::dispatch("password", $database_user, $encrypted_password);
+        return redirect("/")->with('succes', "Password updated successfully");
     }
 
     /**

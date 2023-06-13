@@ -14,17 +14,21 @@ class UpdateUserJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /** @var string $updated_item */
+    protected $updated_item;
+
     /** @var array $old_user_data */
     protected $old_user_data;
 
-    /** @var array $user_data */
+    /** @var string $new_user_data */
     protected $new_user_data;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($old_user_data, $new_user_data)
+    public function __construct($updated_item, $old_user_data, $new_user_data)
     {
+        $this->updated_item = $updated_item;
         $this->old_user_data = $old_user_data;
         $this->new_user_data = $new_user_data;
     }
@@ -36,9 +40,7 @@ class UpdateUserJob implements ShouldQueue
     {
         User::where('user_id', $this->old_user_data["user_id"])
                 ->update([
-                    'username' => $this->new_user_data["username"],
-                    'email' => $this->new_user_data["email"],
-                    'password' => $this->new_user_data["password"]
+                    $this->updated_item => $this->new_user_data
                 ]);
     }
 }

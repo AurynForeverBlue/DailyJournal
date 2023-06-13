@@ -35,6 +35,7 @@ class JournalController extends Controller
 
     /**
      * Store a newly created journal in database
+     * @param CreateJournalRequest $request
      */
     public function store(CreateJournalRequest $request)
     {
@@ -54,6 +55,7 @@ class JournalController extends Controller
 
     /**
      * Display the specified journal
+     * @param string $journal_id
      */
     public function show($journal_id)
     {
@@ -72,6 +74,7 @@ class JournalController extends Controller
 
     /**
      * Show the form for editing the specified journal
+     * @param string $journal_id
      */
     public function edit($journal_id)
     {
@@ -89,6 +92,7 @@ class JournalController extends Controller
 
     /**
      * Update the specified journal in database
+     * @param UpdateJournalRequest $request
      */
     public function update(UpdateJournalRequest $request)
     {
@@ -108,6 +112,7 @@ class JournalController extends Controller
 
     /**
      * Remove the specified Journal from database
+     * @param string $journal_id
      */
     public function destroy($journal_id)
     {   

@@ -1,7 +1,8 @@
 <form action="{{ route("updatePassword") }}" method="post">
-    <input type="password" name="updated_password" id=""><br>
+    @csrf
+    <input type="password" name="password" id=""><br>
     <label for="">Confirm Password</label><br>
-    <input type="password" name="confirm_updated_password" id="">
+    <input type="password" name="password_confirmation" id="">
     <br>
     <input type="submit" value="Update Password">
 </form>
