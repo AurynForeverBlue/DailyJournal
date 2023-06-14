@@ -17,7 +17,9 @@ use App\Http\Requests\UpdateEmailRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Http\Requests\AuthenticateUserRequest;
-
+use App\Http\Requests\UpdatePfphotoRequest;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -152,6 +154,23 @@ class UserController extends Controller
 
         UpdateUserJob::dispatch("password", $database_user, $encrypted_password);
         return redirect("/")->with('succes', "Password updated successfully");
+    }
+        
+    /**
+     * Update the specified user profile photo in database
+     * @param UpdatePfphotoRequest $request
+     */
+    public function updatePfphoto(UpdatePfphotoRequest $request)
+    {
+        $request_data = $request->validated();
+        $database_user = Auth::user();
+        
+        $file = $request->file("pfphoto");
+        $file_name = $database_user["username"] .'.'. $file->getClientOriginalExtension();
+        
+        Storage::disk('public')->put("pfphoto/". $file_name, file_get_contents($file));
+
+        return redirect("/")->with('succes', "Profile photo updated successfully");
     }
 
     /**

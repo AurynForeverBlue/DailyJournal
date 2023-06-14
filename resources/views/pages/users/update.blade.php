@@ -7,7 +7,7 @@
         <div id="settings_container">
             <div id="settings_usercontainer">
                 <div id="settings_user_pfp">
-                    <img src="" alt="{{ $current_user["username"] }}-pfp">
+                    <img src="{{ asset('storage/pfphoto/AurynForeverBlue.gif') }}" alt="{{ $current_user["username"] }}-pfp">
                 </div>
                 <div id="settings_user_data">
                     <h2>{{ $current_user["username"] }}</h2>
@@ -15,6 +15,8 @@
                 </div>
             </div>
             <div class="settings_form">
+                <button class="btn" id="btnModal4">Update Profile Photo</button><br>
+
                 <input type="email" name="" id="" value="{{ $current_user["email"] }}" disabled>
                 <button class="btn" id="btnModal1">Update Email</button><br>
                 
@@ -47,6 +49,14 @@
         <div class="modal-content">
             <h4>New Password</h4>
             @include('components.users.updatePassword')
+        </div>
+    </div>
+
+    <!-- Modal 4 -->
+    <div id="modal_update_pfphoto" class="modal">
+        <div class="modal-content">
+            <h4>New Profile Photo</h4>
+            @include('components.users.updatePfPhoto')
         </div>
     </div>
 @endsection

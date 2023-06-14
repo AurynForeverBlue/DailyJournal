@@ -3,11 +3,13 @@ document.addEventListener("DOMContentLoaded", function() {
     var modal1 = document.getElementById("modal_update_email");
     var modal2 = document.getElementById("modal_update_username");
     var modal3 = document.getElementById("modal_update_password");
+    var modal4 = document.getElementById("modal_update_pfphoto");
 
     // Get the buttons
     var btnModal1 = document.getElementById("btnModal1");
     var btnModal2 = document.getElementById("btnModal2");
     var btnModal3 = document.getElementById("btnModal3");
+    var btnModal4 = document.getElementById("btnModal4");
 
     // Get the close buttons
     var closeButtons = document.getElementsByClassName("close");
@@ -33,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     btnModal3.addEventListener("click", function() {
         showModal(modal3);
+    });
+
+    btnModal4.addEventListener("click", function() {
+        showModal(modal4);
     });
 
     // Event listeners for close button clicks

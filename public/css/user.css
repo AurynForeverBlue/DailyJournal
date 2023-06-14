@@ -56,6 +56,11 @@
     margin-top: 10px;
 }
 
+#settings_user_pfp img{
+    clip-path: circle();
+    height: 200px;
+}
+
 .modal {
     display: none;
     position: fixed;

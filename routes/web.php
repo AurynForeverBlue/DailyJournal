@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/update/user/email', [UserController::class, 'updateEmail'])->name("updateEmail");
     Route::post('/update/user/username', [UserController::class, 'updateUsername'])->name("updateUsername");
     Route::post('/update/user/password', [UserController::class, 'updatePassword'])->name("updatePassword");
+    Route::post('/update/user/pfphoto', [UserController::class, 'updatePfphoto'])->name("updatePfphoto");
 
     Route::get('/logout',  [UserController::class, 'logout'])->name("logout");
 });
