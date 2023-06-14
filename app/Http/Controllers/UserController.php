@@ -72,11 +72,16 @@ class UserController extends Controller
     {
         $input_data = $request->validated();
 
+        $user = new User;
+        $file_type["pfphoto"] = $user->UpdateFileType("pfphoto");
+        $file_type["banner"] = $user->UpdateFileType("banner");
+
         $new_user_data = [
             'user_id' => $this->createUuid(),
             'email' => bcrypt($input_data['email']),
             'username' => $input_data['username'],
             'password' => bcrypt($input_data['password']),
+            'file_type' => $file_type
         ];
 
         CreateUserJob::dispatch($new_user_data);
@@ -94,6 +99,7 @@ class UserController extends Controller
             'email' => Auth::user()->email,
             'username' => Auth::user()->username,
             'password' => Auth::user()->password,
+            'file_type' => Auth::user()->file_type,
         ];
 
         return view('pages.users.update', [
@@ -164,11 +170,16 @@ class UserController extends Controller
     {
         $request_data = $request->validated();
         $database_user = Auth::user();
+        $user = new User();
         
         $file = $request->file("pfphoto");
         $file_name = $database_user["username"] .'.'. $file->getClientOriginalExtension();
+
+        $new_file_type = $user->getRemainingFileTypes("pfphoto");
+        $new_file_type["pfphoto"] = $user->UpdateFileType("pfphoto");
         
         Storage::disk('public')->put("pfphoto/". $file_name, file_get_contents($file));
+        UpdateUserJob::dispatch("file_type", $database_user, $new_file_type);
 
         return redirect("/")->with('succes', "Profile photo updated successfully");
     }

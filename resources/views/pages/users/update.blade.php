@@ -7,7 +7,7 @@
         <div id="settings_container">
             <div id="settings_usercontainer">
                 <div id="settings_user_pfp">
-                    <img src="{{ asset('storage/pfphoto/AurynForeverBlue.gif') }}" alt="{{ $current_user["username"] }}-pfp">
+                    <img src="{{ asset('storage/pfphoto/' . $current_user["file_type"]["pfphoto"]["file_name"] .".". $current_user["file_type"]["pfphoto"]["file_type"]) }}" alt="{{ $current_user["username"] }}-pfp">
                 </div>
                 <div id="settings_user_data">
                     <h2>{{ $current_user["username"] }}</h2>

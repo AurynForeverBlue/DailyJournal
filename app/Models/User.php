@@ -40,6 +40,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'file_type'
     ];
 
     /**
@@ -58,7 +59,32 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'email' => 'hashed',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'file_type' => 'array'
     ];
+
+    protected $file_types = [
+        "pfphoto",
+        "banner"
+    ];
+
+    public function UpdateFileType($img, $file_name = "standard", $file_type = "jpg") {
+        $file_type[$img]["file_name"]  = $file_name;
+        $file_type[$img]["file_type"]  = $file_type;
+
+        return $file_type;
+    }
+
+    public function getRemainingFileTypes($current_file_type) {
+        $remaining_types = [];
+        foreach ($this->file_types as $type) {
+            if ($type != $current_file_type) {
+                array_push($remaining_types, $type);
+            }
+        }
+
+        return $remaining_types;
+    }
 }
