@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreJournalRequest;
+use App\Http\Requests\CreateJournalRequest;
 use App\Http\Requests\UpdateJournalRequest;
 use App\Jobs\CreateJournalJob;
 use App\Jobs\DeleteJournalJob;
@@ -16,7 +16,7 @@ class JournalController extends Controller
     use Uuid;
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the journals
      */
     public function index()
     {
@@ -26,7 +26,7 @@ class JournalController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new journal
      */
     public function create()
     {
@@ -34,9 +34,10 @@ class JournalController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created journal in database
+     * @param CreateJournalRequest $request
      */
-    public function store(StoreJournalRequest $request)
+    public function store(CreateJournalRequest $request)
     {
         $request_data = $request->validated();
         
@@ -53,7 +54,8 @@ class JournalController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified journal
+     * @param string $journal_id
      */
     public function show($journal_id)
     {
@@ -71,7 +73,8 @@ class JournalController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified journal
+     * @param string $journal_id
      */
     public function edit($journal_id)
     {
@@ -88,7 +91,8 @@ class JournalController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified journal in database
+     * @param UpdateJournalRequest $request
      */
     public function update(UpdateJournalRequest $request)
     {
@@ -107,7 +111,8 @@ class JournalController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Journal from database
+     * @param string $journal_id
      */
     public function destroy($journal_id)
     {   

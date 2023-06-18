@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreJournalRequest extends FormRequest
+class UpdateUsernameRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,10 @@ class StoreJournalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => [
-                'required',
+            'username' => [
                 'min:3',
-            ],
-            'body' => [
-                'required',
-                'min:3',
-            ],
+                'unique:users,username',
+            ]
         ];
     }
 
@@ -41,11 +37,8 @@ class StoreJournalRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Post title is required',
-            'title.min:3' => 'Post title is too short',
-            
-            'body.required' => 'Post body is required',
-            'body.min:3' => 'Post body is too short',
+            'username.min:3' => 'Username must contain 3 characters',
+            'username.unique:users,username' => 'Username is already in use',
         ];
     }
 }
