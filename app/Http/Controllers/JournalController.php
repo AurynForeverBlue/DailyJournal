@@ -40,6 +40,13 @@ class JournalController extends Controller
     public function store(CreateJournalRequest $request)
     {
         $request_data = $request->validated();
+
+        $journal = new Journal();
+        $dailyuploadcheck = $journal->DailyUploadCheck();;
+        
+        if ($dailyuploadcheck != null) {
+            return redirect("/")->with('error', "Can't upload more than one journal a day");
+        }
         
         $new_user_data = [
             'journal_id' => $this->createUuid(),
