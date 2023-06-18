@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -70,6 +71,59 @@ class User extends Authenticatable
         "banner"
     ];
 
+    /**
+     * get current user data from database
+     */
+    public function getCurrentUser() {
+        return Auth::user();
+    }
+
+    /**
+     * get current user data from database by user_id
+     * @param string $user_id
+     */
+    public function getUser($user_id) {
+        return $this->find($user_id);
+    }
+
+    /**
+     * get current user data from database by user_id
+     */
+    public function getCurrentModelUser() {
+        return $this->getUser($this->getCurrentUser()->user_id); ;
+    }
+
+    /**
+     * get current user data from database by username
+     * @param string $username
+     */
+    public function getUserWithUsername($username) {
+        return $this->where('username', $username)->first();
+    }
+    
+    /**
+     * create array with filled in file data
+     */
+    public function createFileType() {
+        return [
+            "pfphoto" => $this->UpdateFileType(), 
+            "banner" => $this->UpdateFileType()
+        ];
+    }
+
+    /**
+     * get file data from current user
+     */
+    public function getFileName() {
+        $current_user = $this->getCurrentUser();
+        return $current_user->file_type["pfphoto"]["file_name"].".".$current_user->file_type["pfphoto"]["file_type"];
+    }
+
+    /**
+     * update array for file data
+     * @param string $file_name = "standard"
+     * @param string $file_type = "jpg"
+     */
     public function UpdateFileType($file_name = "standard", $file_type = "jpg") {
         $file_type = [
             "file_name" => $file_name,
@@ -79,6 +133,10 @@ class User extends Authenticatable
         return $file_type;
     }
 
+    /**
+     * get remaining file type data
+     * @param string $current_file_type
+     */
     public function getRemainingFileTypes($current_file_type) {
         $remaining_types = [];
         foreach ($this->file_types as $type) {
@@ -90,14 +148,35 @@ class User extends Authenticatable
         return $remaining_types;
     }
 
+    /**
+     * upload file to project storage
+     * @param string $disk
+     * @param string $location
+     * @param string $filename
+     * @param $file
+     */
     public function uploadFile($disk, $location, $filename, $file) {
         Storage::disk($disk)->put($location. $filename, file_get_contents($file));
     }
 
+    /**
+     * Delete file from project storage
+     * @param string $disk
+     * @param string $location
+     * @param string $filename
+     */
     public function deleteFile($disk, $location, $filename) {
         Storage::disk($disk)->delete($location. $filename);
     }
 
+    /**
+     * Update file from project storage
+     * @param string $disk
+     * @param string $location
+     * @param string $file
+     * @param string $new_filename
+     * @param string $old_filename = "standard.jpg"
+     */
     public function updateFile($disk, $location, $file, $new_filename, $old_filename = "standard.jpg") {
         if ($old_filename != "standard.jpg") {
             $this->deleteFile($disk, $location, $old_filename);

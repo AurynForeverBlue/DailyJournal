@@ -27,7 +27,7 @@
                 <input type="text" name="" id="" value="{{ $current_user["username"] }}" disabled>
                 <button class="btn" id="btnModal2">Update Username</button><br>
                 
-                <input type="password" name="" id="" value="{{ $current_user["password"] }}" disabled>
+                <input type="password" name="" id="" value="secret_password" disabled>
                 <button class="btn" id="btnModal3">Update Password</button><br>
             </div>
         </div>

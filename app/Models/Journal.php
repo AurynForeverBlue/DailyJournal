@@ -46,10 +46,29 @@ class Journal extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * get journal by journal_id
+     * @param string $journal_id
+     */
+    public function getJournal($journal_id) {
+        return $this->find($journal_id);
+    }
+
+    /**
+     * Get all journal entries in database
+     */
+    public function getAllJournals() {
+        return $this->all();
+    }
+
+    /**
+     * checks if user has uploaded in last 24 hours
+     */
     public function DailyUploadCheck() {
+        $userClass = new User();
         $twentyFourHoursAgo = Carbon::now()->subDay();
 
-        $item = $this->where('user_id', Auth::user()->user_id)
+        $item = $this->where('user_id', $userClass->getCurrentUser()->user_id)
                 ->where('created_at', '>', $twentyFourHoursAgo)
                 ->first();
 
