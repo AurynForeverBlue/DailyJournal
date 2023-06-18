@@ -15,7 +15,11 @@
                 </div>
             </div>
             <div class="settings_form">
-                <button class="btn" id="btnModal4">Update Profile Photo</button><br>
+                <button class="btn" id="btnModal4">Update Profile Photo</button>
+                @if ($current_user["file_type"]["pfphoto"]["file_name"] != "standard")
+                    <a href="/delete/user/pfphoto"><button class="btn">Remove Profile Photo</button></a>
+                @endif
+                <br>
 
                 <input type="email" name="" id="" value="{{ $current_user["email"] }}" disabled>
                 <button class="btn" id="btnModal1">Update Email</button><br>

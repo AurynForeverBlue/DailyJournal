@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -59,10 +60,9 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email' => 'hashed',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'file_type' => 'array'
+        'file_type' => 'json'
     ];
 
     protected $file_types = [
@@ -70,9 +70,11 @@ class User extends Authenticatable
         "banner"
     ];
 
-    public function UpdateFileType($img, $file_name = "standard", $file_type = "jpg") {
-        $file_type[$img]["file_name"]  = $file_name;
-        $file_type[$img]["file_type"]  = $file_type;
+    public function UpdateFileType($file_name = "standard", $file_type = "jpg") {
+        $file_type = [
+            "file_name" => $file_name,
+            "file_type" => $file_type,
+        ];
 
         return $file_type;
     }
@@ -86,5 +88,21 @@ class User extends Authenticatable
         }
 
         return $remaining_types;
+    }
+
+    public function uploadFile($disk, $location, $filename, $file) {
+        Storage::disk($disk)->put($location. $filename, file_get_contents($file));
+    }
+
+    public function deleteFile($disk, $location, $filename) {
+        Storage::disk($disk)->delete($location. $filename);
+    }
+
+    public function updateFile($disk, $location, $file, $new_filename, $old_filename = "standard.jpg") {
+        if ($old_filename != "standard.jpg") {
+            $this->deleteFile($disk, $location, $old_filename);
+        }
+
+        $this->uploadFile($disk, $location, $new_filename, $file);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Traits\Uuid;
-use App\Models\Security;
 use App\Jobs\CreateUserJob;
 use App\Jobs\DeleteUserJob;
 use App\Jobs\UpdateUserJob;
@@ -18,6 +17,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Http\Requests\AuthenticateUserRequest;
 use App\Http\Requests\UpdatePfphotoRequest;
+use App\Jobs\UpdateFileJob;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
@@ -73,12 +73,13 @@ class UserController extends Controller
         $input_data = $request->validated();
 
         $user = new User;
-        $file_type["pfphoto"] = $user->UpdateFileType("pfphoto");
-        $file_type["banner"] = $user->UpdateFileType("banner");
+
+        $file_type["pfphoto"] = $user->UpdateFileType();
+        $file_type["banner"] = $user->UpdateFileType();
 
         $new_user_data = [
             'user_id' => $this->createUuid(),
-            'email' => bcrypt($input_data['email']),
+            'email' => $input_data['email'],
             'username' => $input_data['username'],
             'password' => bcrypt($input_data['password']),
             'file_type' => $file_type
@@ -94,12 +95,13 @@ class UserController extends Controller
      */
     public function settings()
     {
-        $security = new Security();
+        $user = Auth::user();
+
         $decrypted_user_data = [
-            'email' => Auth::user()->email,
-            'username' => Auth::user()->username,
-            'password' => Auth::user()->password,
-            'file_type' => Auth::user()->file_type,
+            'email' => $user->email,
+            'username' => $user->username,
+            'password' => $user->password,
+            'file_type' => $user->file_type,
         ];
 
         return view('pages.users.update', [
@@ -119,10 +121,8 @@ class UserController extends Controller
         if (Hash::check($database_user["email"], $request_data["email"])) {
             return redirect("/")->back()->with('succes', "Can't update e-mail to current username");
         }
-        
-        $encrypted_email = bcrypt($request_data["email"]);
 
-        UpdateUserJob::dispatch("email", $database_user, $encrypted_email);
+        UpdateUserJob::dispatch("email", $database_user, $request_data["email"]);
         return redirect("/")->with('succes', "E-mail updated successfully");
     }
 
@@ -168,20 +168,51 @@ class UserController extends Controller
      */
     public function updatePfphoto(UpdatePfphotoRequest $request)
     {
-        $request_data = $request->validated();
-        $database_user = Auth::user();
+        $request->validated();
+        $database_user = User::find(Auth::user()->user_id);
         $user = new User();
         
-        $file = $request->file("pfphoto");
-        $file_name = $database_user["username"] .'.'. $file->getClientOriginalExtension();
+        $old_file_name = $database_user->file_type["pfphoto"]["file_name"].".".$database_user->file_type["pfphoto"]["file_type"];
 
-        $new_file_type = $user->getRemainingFileTypes("pfphoto");
-        $new_file_type["pfphoto"] = $user->UpdateFileType("pfphoto");
-        
-        Storage::disk('public')->put("pfphoto/". $file_name, file_get_contents($file));
-        UpdateUserJob::dispatch("file_type", $database_user, $new_file_type);
+        $file = $request->file("pfphoto");
+        $file_name = $database_user["username"];
+        $file_extension = $file->getClientOriginalExtension();
+        $full_file_name = $file_name .".". $file_extension;
+
+        $database_user->file_type = [
+            "banner" => $database_user->file_type["banner"],
+            "pfphoto" => $user->UpdateFileType($file_name, $file_extension),
+        ];
+
+        $database_user->save();
+
+        $user->updateFile("public", "pfphoto/", $file, $full_file_name, $old_file_name);
 
         return redirect("/")->with('succes', "Profile photo updated successfully");
+    }
+
+    /**
+     * Update the specified user profile photo in database
+     */
+    public function deletePfphoto()
+    {
+        $database_user = User::find(Auth::user()->user_id);
+        $user = new User();
+        
+        $old_filename = $database_user->file_type["pfphoto"]["file_name"].".".$database_user->file_type["pfphoto"]["file_type"];
+        $file_name = "standard";
+        $file_extension = "jpg";
+        
+        $database_user->file_type = [
+            "pfphoto" => $user->UpdateFileType($file_name, $file_extension),
+            "banner" => $database_user->file_type["banner"],
+        ];
+
+        $database_user->save();
+
+        $user->deleteFile("public", "pfphoto/", $old_filename);
+
+        return redirect("/")->with('succes', "Profile photo deleted successfully");
     }
 
     /**

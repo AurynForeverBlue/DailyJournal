@@ -11,20 +11,25 @@ class Security extends User
 {
     use HasFactory;
 
-    public function encryptValue($value)
+    /**
+     * Encrypts a given string using base64 encryption.
+     *
+     * @param string $plaintext The string to encrypt.
+     * @return string The encrypted string.
+     */
+    public function encrypt($plaintext)
     {
-        $encryptedValue = Crypt::encryptString($value);
-        return $encryptedValue;
+        //
     }
 
-    public function decryptValue($encryptedValue)
+    /**
+     * Decrypts a given string using base64 decryption.
+     *
+     * @param string $encrypted The string to decrypt.
+     * @return string|bool The decrypted string, or false on failure.
+     */
+    public function decrypt($encryptedtext)
     {
-        try {
-            $decryptedValue = Crypt::decryptString($encryptedValue);
-            return $decryptedValue;
-        } catch (DecryptException $e) {
-            Log::debug($e);
-            return false;
-        }
+        //
     }
 }

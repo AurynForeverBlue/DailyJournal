@@ -41,6 +41,7 @@ class UpdatePasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'password.min:8' => 'Password must comtain at least 8 characters',
             'password.regex:/[a-z]/' => 'Password must comtain at least one lowercase letter',
             'password.regex:/[A-Z]/' => 'Password must comtain at least one uppercase letter',
             'password.regex:/[0-9]/' => 'Password must comtain at least one digit',
