@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Journal extends Model
 {
@@ -42,5 +44,15 @@ class Journal extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function DailyUploadCheck() {
+        $twentyFourHoursAgo = Carbon::now()->subDay();
+
+        $item = $this->where('user_id', Auth::user()->user_id)
+                ->where('created_at', '>', $twentyFourHoursAgo)
+                ->first();
+
+        return $item !== null;
     }
 }
