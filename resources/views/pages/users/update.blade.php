@@ -6,8 +6,11 @@
     <div id="settings_wrapper">
         <div id="settings_container">
             <div id="settings_usercontainer">
+                <div class="banner">
+                    <img src="{{ asset('storage/banner/' . $banner_data["file_name"] .".". $banner_data["file_type"]) }}" alt="{{ $current_user["username"] }}-banner">
+                </div>
                 <div id="settings_user_pfp">
-                    <img src="{{ asset('storage/pfphoto/' . $current_user["file_type"]["pfphoto"]["file_name"] .".". $current_user["file_type"]["pfphoto"]["file_type"]) }}" alt="{{ $current_user["username"] }}-pfp">
+                    <img src="{{ asset('storage/pfphoto/' . $pfphoto_data["file_name"] .".". $pfphoto_data["file_type"]) }}" alt="{{ $current_user["username"] }}-pfp">
                 </div>
                 <div id="settings_user_data">
                     <h2>{{ $current_user["username"] }}</h2>
@@ -16,7 +19,7 @@
             </div>
             <div class="settings_form">
                 <button class="btn" id="btnModal4">Update Profile Photo</button>
-                @if ($current_user["file_type"]["pfphoto"]["file_name"] != "standard")
+                @if ($pfphoto_data["file_name"] != "standard")
                     <a href="/delete/user/pfphoto"><button class="btn">Remove Profile Photo</button></a>
                 @endif
                 <br>

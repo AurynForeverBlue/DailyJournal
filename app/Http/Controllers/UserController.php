@@ -101,11 +101,12 @@ class UserController extends Controller
         $current_user = [
             'email' => $database_user->email,
             'username' => $database_user->username,
-            'file_type' => $database_user->file_type,
         ];
 
         return view('pages.users.update', [
-            "current_user" => $current_user
+            "current_user" => $current_user,
+            'banner_data' => $database_user->file_type["banner"],
+            'pfphoto_data' => $database_user->file_type["pfphoto"],
         ]);
     }
 
