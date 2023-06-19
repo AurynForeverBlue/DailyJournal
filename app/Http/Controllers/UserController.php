@@ -16,6 +16,7 @@ use App\Http\Requests\UpdateEmailRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Http\Requests\AuthenticateUserRequest;
+use App\Http\Requests\UpdateImageRequest;
 use App\Http\Requests\UpdatePfphotoRequest;
 use App\Jobs\UpdateFileJob;
 use Carbon\Carbon;
@@ -171,17 +172,17 @@ class UserController extends Controller
         
     /**
      * Update the specified user profile photo in database
-     * @param UpdatePfphotoRequest $request
+     * @param UpdateImageRequest $request
      */
-    public function updatePfphoto(UpdatePfphotoRequest $request)
+    public function updatePfphoto(UpdateImageRequest $request)
     {
         $request->validated();
         $userClass = new User();
 
         $database_user = $userClass->getCurrentModelUser();
-        $old_file_name = $userClass->getFileName();
+        $old_file_name = $userClass->getFileName("pfphoto");
 
-        $file = $request->file("pfphoto");
+        $file = $request->file("image");
         $file_name = $database_user["user_id"];
         $file_extension = $file->getClientOriginalExtension();
         $full_file_name = $file_name .".". $file_extension;
@@ -206,7 +207,7 @@ class UserController extends Controller
         $userClass = new User();
         
         $database_user = $userClass->getCurrentModelUser();
-        $old_filename = $userClass->getFileName();
+        $old_filename = $userClass->getFileName("pfphoto");
         
         $database_user->file_type = [
             "pfphoto" => $userClass->UpdateFileType(),
@@ -218,6 +219,57 @@ class UserController extends Controller
         $userClass->deleteFile("public", "pfphoto/", $old_filename);
 
         return redirect("/")->with('succes', "Profile photo deleted successfully.");
+    }
+
+    /**
+     * Update the specified user banner photo in database
+     * @param UpdateImageRequest $request
+     */
+    public function updateBanner(UpdateImageRequest $request)
+    {
+        $request->validated();
+        $userClass = new User();
+
+        $database_user = $userClass->getCurrentModelUser();
+        $old_file_name = $userClass->getFileName("banner");
+
+        $file = $request->file("image");
+        $file_name = $database_user["user_id"];
+        $file_extension = $file->getClientOriginalExtension();
+        $full_file_name = $file_name .".". $file_extension;
+
+        $database_user->file_type = [
+            "banner" => $userClass->UpdateFileType($file_name, $file_extension),
+            "pfphoto" => $database_user->file_type["pfphoto"],
+        ];
+
+        $database_user->save();
+
+        $userClass->updateFile("public", "banner/", $file, $full_file_name, $old_file_name);
+
+        return redirect("/")->with('succes', "Banner photo updated successfully.");
+    }
+
+    /**
+     * Update the specified user profile photo in database
+     */
+    public function deleteBanner()
+    {
+        $userClass = new User();
+        
+        $database_user = $userClass->getCurrentModelUser();
+        $old_filename = $userClass->getFileName("banner");
+        
+        $database_user->file_type = [
+            "pfphoto" => $database_user->file_type["pfphoto"],
+            "banner" => $userClass->UpdateFileType(),
+        ];
+
+        $database_user->save();
+
+        $userClass->deleteFile("public", "banner/", $old_filename);
+
+        return redirect("/")->with('succes', "Profile banner deleted successfully.");
     }
 
     /**
