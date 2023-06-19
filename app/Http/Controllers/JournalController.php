@@ -48,13 +48,12 @@ class JournalController extends Controller
         $userClass = new User();
 
         $current_user = $userClass->getCurrentUser();
-        $dailyuploadcheck = $journalClass->DailyUploadCheck();
 
         if ($current_user == null) {
             return redirect("/login")->with('error', "You have to be logged in to upload a journal");
         }
         
-        if ($dailyuploadcheck != null) {
+        if ($journalClass->DailyUploadCheck()) {
             return redirect("/")->with('error', "Can't upload more than one journal a day");
         }
         
@@ -87,7 +86,7 @@ class JournalController extends Controller
         }
         
         return view('pages.journal.show', [
-            "journal" => $journalClass->getJournal($journal_id)->first(),
+            "journal" => $journalClass->getJournal($journal_id),
             "user_id" => $user_id
         ]);
     }
@@ -101,15 +100,16 @@ class JournalController extends Controller
         $journalClass = new Journal();
         $userClass = new User();
         
-        $journal_data = $journalClass->getJournal($journal_id)->first();
+        $journal_data = $journalClass->getJournal($journal_id);
+        $user_id = $userClass->getCurrentUser()->user_id;
 
-        if ($journal_data["user_id"] == $userClass->getCurrentUser()->user_id) {
+        if ($journal_data["user_id"] == $user_id) {
             return view('pages.journal.edit', [
                 "journal" => $journal_data
             ]);
         }
         else {
-            return redirect("/banuser/".Auth::user()->user_id);
+            return redirect("/banuser/".$user_id);
         }
     }
 

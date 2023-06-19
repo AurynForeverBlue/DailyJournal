@@ -181,7 +181,7 @@ class UserController extends Controller
         $old_file_name = $userClass->getFileName();
 
         $file = $request->file("pfphoto");
-        $file_name = $database_user["username"];
+        $file_name = $database_user["user_id"];
         $file_extension = $file->getClientOriginalExtension();
         $full_file_name = $file_name .".". $file_extension;
 
