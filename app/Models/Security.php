@@ -12,7 +12,7 @@ class Security extends User
     use HasFactory;
 
     /**
-     * Encrypts a given string using base64 encryption.
+     * Encrypts a given string using ...
      *
      * @param string $plaintext The string to encrypt.
      * @return string The encrypted string.
@@ -23,7 +23,7 @@ class Security extends User
     }
 
     /**
-     * Decrypts a given string using base64 decryption.
+     * Decrypts a given string using ...
      *
      * @param string $encrypted The string to decrypt.
      * @return string|bool The decrypted string, or false on failure.

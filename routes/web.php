@@ -30,7 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/write', [JournalController::class, 'create']);
     Route::post('/storeJournal', [JournalController::class, 'store'])->name("storeJournal");
 
-
     Route::get('/update/{slug}', [JournalController::class, 'edit']);
     Route::post('/updateJournal', [JournalController::class, 'update'])->name("updateJournal");
 

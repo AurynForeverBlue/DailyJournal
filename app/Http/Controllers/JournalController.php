@@ -10,6 +10,7 @@ use App\Traits\Uuid;
 use App\Models\Journal;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\UpdateJournalJob;
+use App\Models\User;
 
 class JournalController extends Controller
 {
@@ -20,8 +21,10 @@ class JournalController extends Controller
      */
     public function index()
     {
+        $journalClass = new Journal();
+
         return view('pages.journal.index', [
-            "journals" => Journal::all()->sortByDesc('created_at')
+            "journals" => $journalClass->getAllJournals()->sortByDesc('created_at')
         ]);
     }
 
@@ -41,16 +44,22 @@ class JournalController extends Controller
     {
         $request_data = $request->validated();
 
-        $journal = new Journal();
-        $dailyuploadcheck = $journal->DailyUploadCheck();;
+        $journalClass = new Journal();
+        $userClass = new User();
+
+        $current_user = $userClass->getCurrentUser();
+
+        if ($current_user == null) {
+            return redirect("/login")->with('error', "You have to be logged in to upload a journal");
+        }
         
-        if ($dailyuploadcheck != null) {
+        if ($journalClass->DailyUploadCheck()) {
             return redirect("/")->with('error', "Can't upload more than one journal a day");
         }
         
         $new_user_data = [
             'journal_id' => $this->createUuid(),
-            'user_id' => Auth::user()->user_id,
+            'user_id' => $current_user->user_id,
             'title' => $request_data['title'],
             'body' => $request_data['body'],
         ];
@@ -66,15 +75,18 @@ class JournalController extends Controller
      */
     public function show($journal_id)
     {
+        $userClass = new User();
+        $journalClass = new Journal();
+
         if (Auth::check()){
-            $user_id = Auth::user()->user_id;
+            $user_id = $userClass->getCurrentUser()->user_id;
         }
         else {
             $user_id = null;
         }
         
         return view('pages.journal.show', [
-            "journal" => Journal::where("journal_id", $journal_id)->first(),
+            "journal" => $journalClass->getJournal($journal_id),
             "user_id" => $user_id
         ]);
     }
@@ -85,15 +97,19 @@ class JournalController extends Controller
      */
     public function edit($journal_id)
     {
-        $journal_data = Journal::where("journal_id", $journal_id)->first();
+        $journalClass = new Journal();
+        $userClass = new User();
+        
+        $journal_data = $journalClass->getJournal($journal_id);
+        $user_id = $userClass->getCurrentUser()->user_id;
 
-        if ($journal_data["user_id"] == Auth::user()->user_id) {
+        if ($journal_data["user_id"] == $user_id) {
             return view('pages.journal.edit', [
                 "journal" => $journal_data
             ]);
         }
         else {
-            return redirect("/banuser/".Auth::user()->user_id);
+            return redirect("/banuser/".$user_id);
         }
     }
 
@@ -104,10 +120,11 @@ class JournalController extends Controller
     public function update(UpdateJournalRequest $request)
     {
         $request_data = $request->validated();
+        $userClass = new User();
 
         $updated_journal = [
             'journal_id' => $request_data["journal_id"],
-            'user_id' => Auth::user()->user_id,
+            'user_id' => $userClass->getCurrentUser()->user_id,
             'title' => $request_data["title"],
             'body' => $request_data["body"]
         ];

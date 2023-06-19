@@ -40,19 +40,21 @@ class UserController extends Controller
     public function authenticate(AuthenticateUserRequest $request)
     {
         $input_data = $request->validated();
-        $user = User::where('username', $input_data["username"])->first();
+        $userClass = new User();
+
+        $user = $userClass->getUserWithUsername($input_data["username"]);
 
         if ($user) {
             if (Hash::check($input_data["password"], $user->password)) {
                 Auth::login($user);
-                return redirect("/")->with('succes', 'Welcome '. $input_data["username"]);
+                return redirect("/")->with('succes', 'Welcome '. $input_data["username"].".");
             }
             else {
-                return redirect()->back()->with('error', 'Username or password is incorrect'); 
+                return redirect()->back()->with('error', 'Username or password is incorrect.'); 
             }
         }
         else {
-            return redirect()->back()->with('error', 'Username or password is incorrect');
+            return redirect()->back()->with('error', 'Username or password is incorrect.');
         }
     }
 
@@ -71,11 +73,9 @@ class UserController extends Controller
     public function store(CreateUserRequest $request)
     {
         $input_data = $request->validated();
+        $userClass = new User;
 
-        $user = new User;
-
-        $file_type["pfphoto"] = $user->UpdateFileType();
-        $file_type["banner"] = $user->UpdateFileType();
+        $file_type = $userClass->createFileType();
 
         $new_user_data = [
             'user_id' => $this->createUuid(),
@@ -95,17 +95,17 @@ class UserController extends Controller
      */
     public function settings()
     {
-        $user = Auth::user();
+        $userClass = new User();
+        $database_user = $userClass->getCurrentUser();
 
-        $decrypted_user_data = [
-            'email' => $user->email,
-            'username' => $user->username,
-            'password' => $user->password,
-            'file_type' => $user->file_type,
+        $current_user = [
+            'email' => $database_user->email,
+            'username' => $database_user->username,
+            'file_type' => $database_user->file_type,
         ];
 
         return view('pages.users.update', [
-            "current_user" => $decrypted_user_data
+            "current_user" => $current_user
         ]);
     }
 
@@ -116,14 +116,16 @@ class UserController extends Controller
     public function updateEmail(UpdateEmailRequest $request)
     {
         $request_data = $request->validated();
-        $database_user = Auth::user();
+        $userClass = new User();
+
+        $database_user = $userClass->getCurrentUser();
 
         if (Hash::check($database_user["email"], $request_data["email"])) {
-            return redirect("/")->back()->with('succes', "Can't update e-mail to current username");
+            return redirect("/")->back()->with('succes', "Can't update e-mail to current username.");
         }
 
         UpdateUserJob::dispatch("email", $database_user, $request_data["email"]);
-        return redirect("/")->with('succes', "E-mail updated successfully");
+        return redirect("/")->with('succes', "E-mail updated successfully.");
     }
 
     /**
@@ -133,14 +135,16 @@ class UserController extends Controller
     public function updateUsername(UpdateUsernameRequest $request)
     {
         $request_data = $request->validated();
-        $database_user = Auth::user();
+        $userClass = new User();
+
+        $database_user = $userClass->getCurrentUser();
         
         if ($database_user["username"] == $request_data["username"]) {
             return redirect("/")->back()->with('succes', "Can't update e-mail to current username");
         }
 
         UpdateUserJob::dispatch("username", $database_user, $request_data["username"]);
-        return redirect("/")->with('succes', "Username updated successfully");
+        return redirect("/")->with('succes', "Username updated successfully.");
     }
 
     /**
@@ -150,7 +154,9 @@ class UserController extends Controller
     public function updatePassword(UpdatePasswordRequest $request)
     {
         $request_data = $request->validated();
-        $database_user = Auth::user();
+        $userClass = new User();
+
+        $database_user = $userClass->getCurrentUser();
 
         if (Hash::check($database_user["password"], $request_data["password"])) {
             return redirect("/")->back()->with('succes', "Can't update e-mail to current username");
@@ -159,7 +165,7 @@ class UserController extends Controller
         $encrypted_password = bcrypt($request_data["password"]);
 
         UpdateUserJob::dispatch("password", $database_user, $encrypted_password);
-        return redirect("/")->with('succes', "Password updated successfully");
+        return redirect("/")->with('succes', "Password updated successfully.");
     }
         
     /**
@@ -169,26 +175,26 @@ class UserController extends Controller
     public function updatePfphoto(UpdatePfphotoRequest $request)
     {
         $request->validated();
-        $database_user = User::find(Auth::user()->user_id);
-        $user = new User();
-        
-        $old_file_name = $database_user->file_type["pfphoto"]["file_name"].".".$database_user->file_type["pfphoto"]["file_type"];
+        $userClass = new User();
+
+        $database_user = $userClass->getCurrentModelUser();
+        $old_file_name = $userClass->getFileName();
 
         $file = $request->file("pfphoto");
-        $file_name = $database_user["username"];
+        $file_name = $database_user["user_id"];
         $file_extension = $file->getClientOriginalExtension();
         $full_file_name = $file_name .".". $file_extension;
 
         $database_user->file_type = [
             "banner" => $database_user->file_type["banner"],
-            "pfphoto" => $user->UpdateFileType($file_name, $file_extension),
+            "pfphoto" => $userClass->UpdateFileType($file_name, $file_extension),
         ];
 
         $database_user->save();
 
-        $user->updateFile("public", "pfphoto/", $file, $full_file_name, $old_file_name);
+        $userClass->updateFile("public", "pfphoto/", $file, $full_file_name, $old_file_name);
 
-        return redirect("/")->with('succes', "Profile photo updated successfully");
+        return redirect("/")->with('succes', "Profile photo updated successfully.");
     }
 
     /**
@@ -196,23 +202,21 @@ class UserController extends Controller
      */
     public function deletePfphoto()
     {
-        $database_user = User::find(Auth::user()->user_id);
-        $user = new User();
+        $userClass = new User();
         
-        $old_filename = $database_user->file_type["pfphoto"]["file_name"].".".$database_user->file_type["pfphoto"]["file_type"];
-        $file_name = "standard";
-        $file_extension = "jpg";
+        $database_user = $userClass->getCurrentModelUser();
+        $old_filename = $userClass->getFileName();
         
         $database_user->file_type = [
-            "pfphoto" => $user->UpdateFileType($file_name, $file_extension),
+            "pfphoto" => $userClass->UpdateFileType(),
             "banner" => $database_user->file_type["banner"],
         ];
 
         $database_user->save();
 
-        $user->deleteFile("public", "pfphoto/", $old_filename);
+        $userClass->deleteFile("public", "pfphoto/", $old_filename);
 
-        return redirect("/")->with('succes', "Profile photo deleted successfully");
+        return redirect("/")->with('succes', "Profile photo deleted successfully.");
     }
 
     /**
@@ -220,13 +224,15 @@ class UserController extends Controller
      */
     public function destroy()
     {
+        $userClass = new User();
+
         $user_data = [
-            'journal_id' => Auth::user()->user_id,
+            'user_id' => $userClass->getCurrentUser()->user_id,
         ];
         
         DeleteUserJob::dispatch($user_data);
 
-        return redirect("/")->with('succes', 'Account has been created.');
+        return redirect("/")->with('succes', 'Account has been deleted successfully.');
     }
 
     /**
@@ -236,6 +242,6 @@ class UserController extends Controller
     {
         Auth::logout();
 
-        return redirect("/login")->with('succes', 'You have been logged out');
+        return redirect("/login")->with('succes', 'You have been logged out.');
     }
 }
