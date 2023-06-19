@@ -19,9 +19,15 @@
             </div>
             <div class="settings_form">
                 <button class="btn" id="btnModal4">Update Profile Photo</button>
-                @if ($pfphoto_data["file_name"] != "standard")
-                    <a href="/delete/user/pfphoto"><button class="btn">Remove Profile Photo</button></a>
-                @endif
+                    @if ($pfphoto_data["file_name"] != "standard")
+                        <a href="/delete/user/pfphoto"><button class="btn">Remove Profile Photo</button></a>
+                    @endif
+                <br>
+
+                <button class="btn" id="btnModal5">Update Banner Photo</button>
+                    @if ($banner_data["file_name"] != "standard")
+                        <a href="/delete/user/banner"><button class="btn">Remove Banner Photo</button></a>
+                    @endif
                 <br>
 
                 <input type="email" name="" id="" value="{{ $current_user["email"] }}" disabled>
@@ -63,7 +69,15 @@
     <div id="modal_update_pfphoto" class="modal">
         <div class="modal-content">
             <h4>New Profile Photo</h4>
-            @include('components.users.updatePfPhoto')
+            @include('components.users.updatePfphoto')
+        </div>
+    </div>
+
+    <!-- Modal 5 -->
+    <div id="modal_update_banner" class="modal">
+        <div class="modal-content">
+            <h4>New Banner Photo</h4>
+            @include('components.users.updateBanner')
         </div>
     </div>
 @endsection

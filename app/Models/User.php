@@ -114,9 +114,9 @@ class User extends Authenticatable
     /**
      * get file data from current user
      */
-    public function getFileName() {
+    public function getFileName($type) {
         $current_user = $this->getCurrentUser();
-        return $current_user->file_type["pfphoto"]["file_name"].".".$current_user->file_type["pfphoto"]["file_type"];
+        return $current_user->file_type[$type]["file_name"].".".$current_user->file_type[$type]["file_type"];
     }
 
     /**
