@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('pages.layout')
 @section('main')
     <x-authenticate-card>
         <h2>Login</h2>

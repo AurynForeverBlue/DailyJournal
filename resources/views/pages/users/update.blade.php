@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('pages.layout')
 @section('js')
     <script src="./js/modelBox.js"></script>
 @endsection

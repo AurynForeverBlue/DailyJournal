@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('pages.layout')
 @section('main')
     <div id="location-page-container">
         @if (!empty($journal))

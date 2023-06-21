@@ -9,18 +9,14 @@ use App\Jobs\DeleteUserJob;
 use App\Jobs\UpdateUserJob;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UpdateEmailRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Http\Requests\AuthenticateUserRequest;
 use App\Http\Requests\UpdateImageRequest;
-use App\Http\Requests\UpdatePfphotoRequest;
-use App\Jobs\UpdateFileJob;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
+use App\Jobs\AuthenticateUserJob;
+use App\Jobs\UpdateEmailJob;
 
 class UserController extends Controller
 {
@@ -47,6 +43,7 @@ class UserController extends Controller
 
         if ($user) {
             if (Hash::check($input_data["password"], $user->password)) {
+                AuthenticateUserJob::dispatch($user->email);
                 Auth::login($user);
                 return redirect("/")->with('succes', 'Welcome '. $input_data["username"].".");
             }
@@ -126,7 +123,7 @@ class UserController extends Controller
             return redirect("/")->back()->with('succes', "Can't update e-mail to current username.");
         }
 
-        UpdateUserJob::dispatch("email", $database_user, $request_data["email"]);
+        UpdateEmailJob::dispatch("email", $database_user, $request_data["email"]);
         return redirect("/")->with('succes', "E-mail updated successfully.");
     }
 

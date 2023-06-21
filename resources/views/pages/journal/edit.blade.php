@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('pages.layout')
 @section('main')
     <div id="journal-form">
         <h2>Update your journal entry</h2>

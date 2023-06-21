@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\UpdateUserMail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class UpdateUserJob implements ShouldQueue
 {
@@ -38,6 +40,7 @@ class UpdateUserJob implements ShouldQueue
      */
     public function handle(): void
     {
+        Mail::to($this->old_user_data["email"])->send(new UpdateUserMail());
         User::where('user_id', $this->old_user_data["user_id"])
                 ->update([
                     $this->updated_item => $this->new_user_data
